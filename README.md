@@ -1,5 +1,7 @@
 # @deepwhale-cn/dsh-mcp-audit
 
+[![Listed on dsh-plugin.org](https://dsh-plugin.org/badges/listed.svg)](https://dsh-plugin.org/plugins/feely0208/dsh-mcp-audit)
+
 **MCP 服务安全** —— 审计 MCP 配置里的未锁定远端包、明文端点、可执行本地服务。
 
 ## 不装它会怎样
