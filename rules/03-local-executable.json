@@ -1,0 +1,14 @@
+{
+  "id": "MCP-LOCAL-EXEC",
+  "title": "MCP 服务指向本地可执行文件或脚本",
+  "severity": "medium",
+  "source": "MCP 官方文档 · Server 生命周期；最小权限原则 —— 应限制可执行程序的运行",
+  "advice": "这个 MCP 服务指向本机的一个可执行文件/脚本。请确认：① 它是不是你自己写的；② 它读写的目录范围；③ 它的来源（第三方二进制很难审计）。MCP 服务的权限通常等于整个用户会话的权限 —— 比一般插件大得多。",
+  "check": {
+    "type": "file-pattern",
+    "pattern": "\"command\"\\s*:\\s*\"[^\"]*(/\\./[^\"']*|\\.sh|\\.py|\\.js|\\.mjs|/usr/local/bin|/opt/)[^\"]*\"",
+    "flags": "g",
+    "paths": ["**/mcp*.json", "**/*mcp*.json", "**/claude_desktop_config.json", "**/.mcp.json", "**/settings.json"],
+    "max": 20
+  }
+}

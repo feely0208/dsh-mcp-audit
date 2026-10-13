@@ -1,0 +1,4 @@
+# @deepwhale-cn/dsh-mcp-audit 的组合层
+- insert:
+    - id: mcp-audit
+      name: '@deepwhale-cn/dsh-mcp-audit'

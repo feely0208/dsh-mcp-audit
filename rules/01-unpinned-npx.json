@@ -1,0 +1,14 @@
+{
+  "id": "MCP-UNPINNED-NPX",
+  "title": "MCP 服务用 npx -y 拉未锁定版本的远端包",
+  "severity": "high",
+  "source": "MCP 官方文档 · Server 部署建议；npm Docs — npx `-y` 跳过确认；供应链安全通用实践（锁定版本 + 完整性校验）",
+  "advice": "`npx -y some-mcp-server` 每次启动都拉**最新版**：上游发新版（或被投毒）你会立刻执行它的代码，而且**没有任何版本记录可以回滚**。改成 `some-mcp-server@1.2.3`。",
+  "check": {
+    "type": "file-pattern",
+    "wholeFile": true,
+    "pattern": "\"-y\"\\s*,\\s*\"(@?[\\w.-]+(?:/[\\w.-]+)?)(?![^\"]*@\\d)",
+    "paths": ["**/mcp*.json", "**/*mcp*.json", "**/claude_desktop_config.json", "**/.mcp.json", "**/settings.json", "mcp.json", ".mcp.json"],
+    "max": 20
+  }
+}

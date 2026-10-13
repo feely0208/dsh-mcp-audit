@@ -1,0 +1,14 @@
+{
+  "id": "MCP-NO-CONFIG",
+  "title": "仓库里找不到 MCP 配置",
+  "severity": "low",
+  "source": "MCP 官方文档 · 配置位置（各客户端不同：claude_desktop_config.json / .mcp.json / settings.json）",
+  "advice": "没在本仓库找到 MCP 配置。如果你们确实在用 MCP，说明配置不在版本控制里 —— 那意味着：① 团队成员的配置可能不一致；② 没人审查过这些服务要什么权限。建议把配置模板（不含密钥）纳入版本控制。",
+  "check": {
+    "type": "files-lack",
+    "pattern": "\"mcpServers\"|mcpServers",
+    "flags": "i",
+    "paths": ["**/mcp*.json", "**/*mcp*.json", "**/claude_desktop_config.json", "**/.mcp.json", "**/settings.json", "mcp.json", ".mcp.json"],
+    "evidence": "没有任何文件里出现 mcpServers"
+  }
+}

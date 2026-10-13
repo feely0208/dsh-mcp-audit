@@ -1,0 +1,14 @@
+{
+  "id": "MCP-PLAINTEXT-URL",
+  "title": "MCP 端点使用明文 http://",
+  "severity": "high",
+  "source": "GB/T 22239-2019 第三级 · 安全通信网络 · 通信传输 —— 应保证通信过程中数据的完整性与保密性；MCP 官方文档 · 传输安全",
+  "advice": "MCP 服务会读写你的文件、执行工具调用 —— 走明文意味着中间人可以看到甚至改写这些内容。改为 https://（本地回环 http://localhost 不算，本规则已排除）。",
+  "check": {
+    "type": "file-pattern",
+    "pattern": "[\"']http://(?!localhost|127\\.0\\.0\\.1|0\\.0\\.0\\.0|\\[::1\\])[^\"']*[\"']",
+    "flags": "g",
+    "paths": ["**/mcp*.json", "**/*mcp*.json", "**/claude_desktop_config.json", "**/.mcp.json", "**/settings.json"],
+    "max": 20
+  }
+}

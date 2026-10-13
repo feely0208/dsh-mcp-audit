@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>深鲸守护 · MCP 服务安全 · 检查报告</title>
+<style>
+  :root{--bg:#0b1018;--fg:#e6edf6;--muted:#8b9bb4;--line:#1e2a3a;--card:#121a26}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:32px}
+  .wrap{max-width:1180px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .card .k{color:var(--muted);font-size:12px;margin-bottom:6px}
+  .card .v{font-size:20px;font-weight:700}
+  .chip{display:inline-block;padding:3px 10px;border-radius:999px;margin:0 6px 6px 0;font-size:13px;
+        border:1px solid var(--c);color:var(--c)}
+  .chip b{font-size:15px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}
+  th{color:var(--muted);font-weight:500;background:#0e1622}
+  tr:last-child td{border-bottom:0}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px}
+  .t{font-weight:600;margin-bottom:2px}
+  .src{color:var(--muted);font-size:12px}
+  code{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#7dd3fc}
+  .ev{color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
+  .adv{color:var(--muted);font-size:12px;max-width:260px}
+  .ok{background:#0d2b1a;border:1px solid #1d7a4a;color:#4ade80;padding:16px;border-radius:12px;margin-bottom:20px}
+  .warn{background:#2b1f0d;border:1px solid #a16207;color:#fbbf24;padding:12px 16px;border-radius:12px;margin-bottom:20px;font-size:13px}
+  footer{color:var(--muted);font-size:12px;margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
+  footer p{margin:3px 0}
+</style></head><body><div class="wrap">
+  <h1>深鲸守护 · MCP 服务安全</h1>
+  <div class="sub">审计 MCP 配置：未锁定的远端包、明文端点、可执行本地服务 —— MCP 是 agent 的新攻击面</div>
+
+  <div class="cards">
+    <div class="card"><div class="k">扫描文件</div><div class="v">2</div></div>
+    <div class="card"><div class="k">检查规则</div><div class="v">4<span style="font-size:13px;color:var(--muted)">/4</span></div></div>
+    <div class="card"><div class="k">命中</div><div class="v" style="color:#ea580c">3</div></div>
+    <div class="card"><div class="k">已跳过目录</div><div class="v">0</div></div>
+  </div>
+
+  
+  <div class="warn">⚠️ 扫描到的文件很少，请确认扫描目录是否正确 —— <b>不要因「全绿」就放心</b>。</div>
+  
+
+  <div style="margin-bottom:16px"><span class="chip" style="--c:#ea580c">高 <b>2</b></span><span class="chip" style="--c:#ca8a04">中 <b>1</b></span></div>
+       <table><thead><tr><th>级别</th><th>问题</th><th>位置 / 证据</th><th>建议</th></tr></thead>
+       <tbody>
+      <tr class="sev-high">
+        <td><span class="dot" style="--c:#ea580c"></span>高</td>
+        <td><div class="t">MCP 服务用 npx -y 拉未锁定版本的远端包</div><div class="src">MCP 官方文档 · Server 部署建议；npm Docs — npx <code>-y</code> 跳过确认；供应链安全通用实践（锁定版本 + 完整性校验）</div></td>
+        <td><code>mcp.json:3</code><div class="ev">&quot;-y&quot;, &quot;@modelcontextprotocol/server-filesystem</div></td>
+        <td class="adv"><code>npx -y some-mcp-server</code> 每次启动都拉<b>最新版</b>：上游发新版（或被投毒）你会立刻执行它的代码，而且<b>没有任何版本记录可以回滚</b>。改成 <code>some-mcp-server@1.2.3</code>。</td>
+      </tr>
+      <tr class="sev-high">
+        <td><span class="dot" style="--c:#ea580c"></span>高</td>
+        <td><div class="t">MCP 端点使用明文 http://</div><div class="src">GB/T 22239-2019 第三级 · 安全通信网络 · 通信传输 —— 应保证通信过程中数据的完整性与保密性；MCP 官方文档 · 传输安全</div></td>
+        <td><code>mcp.json:4</code><div class="ev">&quot;http://mcp.example.com/sse&quot;</div></td>
+        <td class="adv">MCP 服务会读写你的文件、执行工具调用 —— 走明文意味着中间人可以看到甚至改写这些内容。改为 https://（本地回环 http://localhost 不算，本规则已排除）。</td>
+      </tr>
+      <tr class="sev-medium">
+        <td><span class="dot" style="--c:#ca8a04"></span>中</td>
+        <td><div class="t">MCP 服务指向本地可执行文件或脚本</div><div class="src">MCP 官方文档 · Server 生命周期；最小权限原则 —— 应限制可执行程序的运行</div></td>
+        <td><code>mcp.json:5</code><div class="ev">&quot;command&quot;: &quot;./scripts/tool.sh&quot;</div></td>
+        <td class="adv">这个 MCP 服务指向本机的一个可执行文件/脚本。请确认：① 它是不是你自己写的；② 它读写的目录范围；③ 它的来源（第三方二进制很难审计）。MCP 服务的权限通常等于整个用户会话的权限 —— 比一般插件大得多。</td>
+      </tr></tbody></table>
+
+  <footer>
+    <p>扫描范围：<code>tests/fixtures/fail/demo-project</code> · 2 个文件</p>
+    <p>规则库：— · 生成时间：2026-10-13 02:39:31</p>
+    <p></p>
+  </footer>
+</div></body></html>
