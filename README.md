@@ -3,7 +3,7 @@
 [![Listed on dsh-plugin.org](https://dsh-plugin.org/badges/listed.svg)](https://dsh-plugin.org/plugins/feely0208/dsh-mcp-audit)
 
 
-**关键词**：MCP 安全 · MCP 审计 · 模型上下文协议 · MCP 配置 · 未锁版本 · MCP 投毒
+**关键词**：MCP 安全 · MCP 审计 · 模型上下文协议 · MCP 配置 · 未锁版本 · MCP 投毒 · MCP 服务
 **Keywords**: MCP security · MCP audit · model context protocol · server security · MCP supply chain
 **MCP 服务安全** —— 审计 MCP 配置里的未锁定远端包、明文端点、可执行本地服务。
 
