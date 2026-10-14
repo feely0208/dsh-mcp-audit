@@ -52,7 +52,11 @@ dsh-mcp-audit --list-rules    # 列出规则和依据
 dsh-mcp-audit --html r.html
 ```
 
-![dsh-mcp-audit 的检查报告示例](https://www.deepwhale.org.cn/plugin-assets/dsh-mcp-audit/report.png)
+![dsh-mcp-audit 检查报告示例](https://www.deepwhale.org.cn/plugin-assets/dsh-mcp-audit/report.png)
+
+![dsh-mcp-audit 演示模式输出](https://www.deepwhale.org.cn/plugin-assets/dsh-mcp-audit/demo.png)
+
+![dsh-mcp-audit 规则与依据](https://www.deepwhale.org.cn/plugin-assets/dsh-mcp-audit/rules.png)
 
 ## 边界
 
